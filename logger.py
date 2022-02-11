@@ -1,2 +1,0 @@
-def log(conn):
-    pass

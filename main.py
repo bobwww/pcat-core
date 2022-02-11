@@ -1,33 +1,40 @@
 from multiprocessing import Process, Pipe
 
-from sniffer import sniff
-from analyzer import analyze
-from enforcer import enforce
-from logger import log
+from sniffer.sniffer import sniff
+from analyzer.analyzer import analyze
+from enforcer.enforcer import enforce
+from logger.logger import log
 
 
 def main():
-    #Pipe definitons
-    sniff_pipe, analyzer_recv_pipe = Pipe()
-    analyzer_send_pipe, enforcer_recv_pipe = Pipe()
-    enforcer_send_pipe, logger_recv_pipe = Pipe()
+    '''
+    Initilizes main processes: sniffer, analyzer, enforcer and logger.
+    
+    '''
 
-    #Process definitions
-    sniffer_proc = Process(target=sniff, args=(sniff_pipe,))
-    analyzer_proc = Process(target=analyze, args=(analyzer_recv_pipe, analyzer_send_pipe))
-    enforcer_proc = Process(target=enforce, args=(enforcer_recv_pipe, enforcer_send_pipe))
-    logger_proc = Process(target=log, args=(logger_recv_pipe,))
+    #   Pipe definitons
+    #   x_src - pipe starts at x
+    #   x_dst - end of pipe that started at x
+    sniffer_src, sniffer_dst = Pipe()
+    analyzer_src, analyzer_dst = Pipe()
+    enforcer_src, enforcer_dst = Pipe()
 
-    #start sniffer
+    #   Process definitions
+    sniffer_proc = Process(target=sniff, args=(sniffer_src,))
+    analyzer_proc = Process(target=analyze, args=(sniffer_dst, analyzer_src))
+    enforcer_proc = Process(target=enforce, args=(analyzer_dst, enforcer_src))
+    logger_proc = Process(target=log, args=(enforcer_dst,))
+
+    #   Start sniffer
     sniffer_proc.start()
 
-    #start analyzer
+    #   Start analyzer
     analyzer_proc.start()
 
-    #start enforcer
+    #   Start enforcer
     enforcer_proc.start()
 
-    #start logger
+    #   Start logger
     logger_proc.start()
 
 
