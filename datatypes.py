@@ -30,28 +30,24 @@ class Chain:
     rules: Sequence[Rule]
     action: str
 
-    def __init__(self, rules, action) -> None:
+    def __init__(self, rules, action, alert=False) -> None:
         self.rules = rules
         self.action = action
+        self.alert = alert
 
     def __str__(self) -> str:
-        return "{action} {{\n\t{rules}\n}}".format(
+        return "{alert}{action} {{\n\t{rules}\n}}".format(
                                             action=self.action,
-                                            rules="\n\t".join(['\t'.join(str(s).splitlines(True)) for s in self.rules])
-                                                    ) # How does that work ??
-
-
-class ExceptChain(Chain):
-    pass
+                                            rules="\n\t".join(['\t'.join(str(s).splitlines(True)) for s in self.rules]),
+                                            alert=("alert " if self.alert else "")
+                                                ) # How does that work ??
 
 
 class Head:
     chains: Sequence[Chain]
-    except_chains: Sequence[ExceptChain]
 
-    def __init__(self, chains, except_chains) -> None:
+    def __init__(self, chains) -> None:
         self.chains = chains
-        self.except_chains = except_chains
 
     def __str__(self) -> str:
-        return "{}".format("\n".join([str(s) for s in self.except_chains+self.chains]))
+        return "{}".format("\n".join([str(s) for s in self.chains]))
