@@ -1,6 +1,7 @@
 import ply.yacc as yacc
 from lexercat import tokens
 from datatypes import Head, Chain, Rule, Section
+from expression import *
 
 """
 Grammar rules: (Not updated)
@@ -39,9 +40,9 @@ def p_head_with_alert(p):
 		    |	head ALERT ACTION LCBRACKET chain RCBRACKET
     '''
     if len(p) == 6:
-        p[0] = [Chain(p[4], p[1], alert=True),]
+        p[0] = [Chain(p[4], p[2], alert=True),]
     elif len(p) == 7:
-        p[0] = p[1]+[Chain(p[5], p[2], alert=True)]
+        p[0] = p[1]+[Chain(p[5], p[3], alert=True)]
 
 
 def p_chain(p):
@@ -73,19 +74,57 @@ def p_section(p):
     p[0] = Section(p[1], p[2])
 
 
-def p_expr(p):
+def p_expr_quotes(p):
     r'''
     expr	:	QUOTES
-		    |	NUMBER
+            |   FUNC QUOTES
     '''
-    p[0] = p[1]
+    if len(p) == 2:
+        p[0] = StrExpr(p[1])
+    elif len(p) == 3:
+        p[0] = StrExpr(p[2], p[1])
+
+def p_expr_number(p):
+    '''     
+    expr    :	NUMBER
+		    |	NUMBER RANGE
+		    |	RANGE NUMBER
+		    |	NUMBER RANGE NUMBER
+    '''
+    if len(p) == 2:
+        p[0] = IntExpr(min=p[1], max=p[1])
+    elif len(p) == 3:
+        if isinstance(p[1], int):
+            p[0] = IntExpr(min=p[1])
+        elif isinstance(p[2], int):
+            p[0] = IntExpr(min=None, max=p[2])
+    elif len(p) == 4:
+        p[0] = IntExpr(min=p[1], max=p[3])
+
+def p_expr_or(p):
+    '''
+    expr    :   expr OR expr
+    '''
+    p[0] = OrExpr(p[1], [3])
+
+def p_expr_and(p):
+    '''
+    expr    :   expr AND expr
+    '''
+    p[0] = AndExpr(p[1], [3])
+
+def p_expr_not(p):
+    '''
+    expr    :   NOT expr
+    '''
+    p[0] = NotExpr(p[2])
 
 
 def p_error(p):
     if p:
          print("Syntax error at token:", p.type, "\nAt position: ", (p.lexpos, p.lineno), "\nIllegal char:", p.value)
     else:
-         print("Syntax error: EOF")
+         print("ParserError: End-Of-File")
 
 parser = yacc.yacc()
 

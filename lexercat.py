@@ -2,10 +2,10 @@ import ply.lex as lex
 
 #   Reserved keywords
 ACTIONS = (
-    'deny', 'pass'
+    'allow', 'sallow', 'deny', 'sdeny'
 )
 PROTOS = (
-    'tcp', 'udp', 'http'
+    'tcp', 'udp', 'http', 'ftp', 'icmp', 'dns'
 )
 
 
@@ -13,35 +13,46 @@ PROTOS = (
 tokens = (
     'ACTION', 'PROTO', 'HEADER', 'QUOTES', 'EOL', 
     'RCBRACKET', 'LCBRACKET', 'DELIMETER', 'ALERT',
-    'FUNC', 'COMMENT', 'NUMBER', 'RANGE', 'OR', 'AND'
+    'FUNC', 'COMMENT', 'NUMBER', 'RANGE', 'OR', 'AND',
+     'NOT'
 )
+
 
 #   States
 #   initial - starting state
-#   expr - state that is used for tokenizing expressions.
-#   Expressions are declarations of values. They may contain certain keywords
+#   expr - state that is used for tokenizing inside expressions
+#   Expressions are conditions that must be met by the field value.. They may contain certain keywords
 #   defined by the parser. They may also contain strings.
 #   For example: contains "hello, world" or len > 10
 states = (
-    ('expr', 'exclusive'),  # State for evaluating expression for header, e.g. regex
+    ('expr', 'exclusive'),
 )
 
+# Initial state token definitions
+#
+#
 
 t_LCBRACKET = r'\{'
 t_RCBRACKET = r'\}'
-t_ALERT = r'alert'
 
-#   Ignore tabs and spaces
-#   Note: only relevant in initial state
-t_ignore = ' \t'
+t_ignore = ' \t'    # Ignore tabs and spaces
 
+# Counts newlines, for error information/debugging.
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+# Handles invalid characters by printing and skipping to next char
+def t_error(t):
+    print('Illegal character: %s' % t.value[0])
+    t.lexer.skip(1)
 
 #   Comments are prefixed with '#' till the end of line
 def t_COMMENT(t):
     r'\#.*'
     pass
 
-
+#   Any names that appear will be handled here.
 def t_name(t):
     r'[A-Za-z_][A-Za-z0-9_]*'
 
@@ -50,31 +61,42 @@ def t_name(t):
         t.type = 'ACTION'
     elif t.value in PROTOS:
         t.type = 'PROTO'
+    elif t.value == 'alert':
+        t.type = 'ALERT'
     else:
         t.type = 'HEADER'
 
     return t
 
 
-def t_newline(t):
-    r'\n+'
-    #t.lexer.lineno += t.value.count('\n')
-    t.lexer.lineno += len(t.value)
+# Expr state token definitions
+#
+#
 
-
-def t_error(t):
-    print('Illegal character: %s' % t.value[0])
-    t.lexer.skip(1)
-
-# Expr state tokenizers
+# Expr state begins once ':' is encountered in input
 def t_begin_expr(t):
     r'\:'
     t.lexer.push_state('expr')
 
 t_expr_ignore = ' \t'
+
+def t_expr_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
 t_expr_RANGE = r'\-'
-t_expr_OR = r'or'
-t_expr_AND = r'and'
+
+def t_expr_OR(t):
+    r'or'
+    return t
+
+def t_expr_AND(t):
+    r'and'
+    return t
+
+def t_expr_NOT(t):
+    r'not'
+    return t
 
 def t_expr_FUNC(t):
     r'[A-Za-z_]+'
@@ -100,4 +122,5 @@ def t_expr_error(t):
     print('Illegal character in expr: %s' % t.value[0])
     t.lexer.skip(1)
 
+# Builds the lexer. Necessary for parser
 lexer = lex.lex()
