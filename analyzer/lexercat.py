@@ -5,18 +5,16 @@ ACTIONS = (
     'allow', 'sallow', 'deny', 'sdeny'
 )
 PROTOS = (
-    'tcp', 'udp', 'http', 'ftp', 'icmp', 'dns'
+    'ether', 'ip', 'tcp', 'udp', 'http', 'ftp', 'icmp', 'dns'
 )
-
 
 #   Tokens
 tokens = (
-    'ACTION', 'PROTO', 'HEADER', 'QUOTES', 'EOL', 
+    'ACTION', 'PROTO', 'HEADER', 'QUOTES', 'EOL',
     'RCBRACKET', 'LCBRACKET', 'DELIMETER', 'ALERT',
     'FUNC', 'COMMENT', 'NUMBER', 'RANGE', 'OR', 'AND',
-     'NOT'
+    'NOT'
 )
-
 
 #   States
 #   initial - starting state
@@ -35,22 +33,25 @@ states = (
 t_LCBRACKET = r'\{'
 t_RCBRACKET = r'\}'
 
-t_ignore = ' \t'    # Ignore tabs and spaces
+t_ignore = ' \t'  # Ignore tabs and spaces
+
 
 # Counts newlines, for error information/debugging.
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+
 # Handles invalid characters by printing and skipping to next char
 def t_error(t):
-    print('Illegal character: %s' % t.value[0])
-    t.lexer.skip(1)
+    raise SyntaxError(f'Illegal character: \'{t.value[0]}\' at position: {t.lexpos}')
+
 
 #   Comments are prefixed with '#' till the end of line
 def t_COMMENT(t):
     r'\#.*'
     pass
+
 
 #   Any names that appear will be handled here.
 def t_name(t):
@@ -61,6 +62,7 @@ def t_name(t):
         t.type = 'ACTION'
     elif t.value in PROTOS:
         t.type = 'PROTO'
+        t.value = t.value.upper()
     elif t.value == 'alert':
         t.type = 'ALERT'
     else:
@@ -78,49 +80,60 @@ def t_begin_expr(t):
     r'\:'
     t.lexer.push_state('expr')
 
+
 t_expr_ignore = ' \t'
+
 
 def t_expr_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+
 t_expr_RANGE = r'\-'
+
 
 def t_expr_OR(t):
     r'or'
     return t
 
+
 def t_expr_AND(t):
     r'and'
     return t
 
+
 def t_expr_NOT(t):
     r'not'
     return t
+
 
 def t_expr_FUNC(t):
     r'[A-Za-z_]+'
     t.value = t.value.lower()
     return t
 
+
 def t_expr_QUOTES(t):
     r'"[\S\s]*?"|\'[\S\s]*?\''
     t.value = t.value[1:-1]
     return t
+
 
 def t_expr_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
+
 def t_expr_EOL(t):
     r'\;'
     t.lexer.pop_state()
     return t
 
+
 def t_expr_error(t):
-    print('Illegal character in expr: %s' % t.value[0])
-    t.lexer.skip(1)
+    raise SyntaxError(f'Illegal character inside expression: \'{t.value[0]}\' at position: {t.lexpos}')
+
 
 # Builds the lexer. Necessary for parser
 lexer = lex.lex()

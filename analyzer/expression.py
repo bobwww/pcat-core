@@ -1,9 +1,9 @@
-
 from abc import ABC, abstractmethod
 import re
 
+
 class Expression(ABC):
-    
+
     @abstractmethod
     def __init__(self, *args) -> None:
         pass
@@ -22,7 +22,7 @@ class NotExpr(Expression):
 
 
 class AndExpr(Expression):
-    
+
     def __init__(self, expr1, expr2) -> None:
         self.expr1 = expr1
         self.expr2 = expr2
@@ -41,13 +41,13 @@ class OrExpr(Expression):
 
 
 class IntExpr(Expression):
-    
-    def __init__(self, min: int =None, max: int =None) -> None:
+
+    def __init__(self, min: int = None, max: int = None) -> None:
         if min is None and max is None:
             raise Exception("'min' and 'max' cannot both be None at the same time")
         self.min = min
         self.max = max
-    
+
     def eval(self, x: int) -> bool:
         if self.min is None:
             return x <= self.max
@@ -58,21 +58,21 @@ class IntExpr(Expression):
 
 
 class StrExpr(Expression):
-    
-    def __init__(self, p: str, method: str ='') -> None:
+
+    def __init__(self, p: str, method: str = '') -> None:
         self.p = p
         self.method = method
 
     def eval(self, s: str) -> bool:
         if self.method:
-            #return self.func_dict.get(self.func)(self.s, x)
+            # return self.func_dict.get(self.func)(self.s, x)
             return StrMagic.call(self.method, s, self.p)
         else:
             return s == self.p
 
 
 class StrMagic:
-    '''
+    """
     Class to define checks on strings.
     Example:
         @staticmethod
@@ -81,11 +81,12 @@ class StrMagic:
 
     To use the method, do:
         StrMagic.call(name_of_method, s, p)
-    '''
+    """
+
     @staticmethod
     def contains(s, p):
         return p in s
-    
+
     @staticmethod
     def search(s, p):
         return bool(re.search(p, s))
@@ -96,7 +97,6 @@ class StrMagic:
 
     @classmethod
     def call(cls, name, s, p):
-        if name.startwith('__'):
+        if name.startswith('__'):
             raise Exception
-        return getattr(cls, name)(s, p) 
-
+        return getattr(cls, name)(s, p)

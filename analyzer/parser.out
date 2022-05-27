@@ -1,0 +1,566 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMENT
+    DELIMETER
+
+Grammar
+
+Rule 0     S' -> head
+Rule 1     head -> ACTION LCBRACKET chain RCBRACKET
+Rule 2     head -> head ACTION LCBRACKET chain RCBRACKET
+Rule 3     head -> ALERT ACTION LCBRACKET chain RCBRACKET
+Rule 4     head -> head ALERT ACTION LCBRACKET chain RCBRACKET
+Rule 5     chain -> PROTO LCBRACKET rule RCBRACKET
+Rule 6     chain -> chain PROTO LCBRACKET rule RCBRACKET
+Rule 7     rule -> section EOL
+Rule 8     rule -> rule section EOL
+Rule 9     section -> HEADER expr
+Rule 10    expr -> QUOTES
+Rule 11    expr -> FUNC QUOTES
+Rule 12    expr -> NUMBER
+Rule 13    expr -> NUMBER RANGE
+Rule 14    expr -> RANGE NUMBER
+Rule 15    expr -> NUMBER RANGE NUMBER
+Rule 16    expr -> expr OR expr
+Rule 17    expr -> expr AND expr
+Rule 18    expr -> NOT expr
+
+Terminals, with rules where they appear
+
+ACTION               : 1 2 3 4
+ALERT                : 3 4
+AND                  : 17
+COMMENT              : 
+DELIMETER            : 
+EOL                  : 7 8
+FUNC                 : 11
+HEADER               : 9
+LCBRACKET            : 1 2 3 4 5 6
+NOT                  : 18
+NUMBER               : 12 13 14 15 15
+OR                   : 16
+PROTO                : 5 6
+QUOTES               : 10 11
+RANGE                : 13 14 15
+RCBRACKET            : 1 2 3 4 5 6
+error                : 
+
+Nonterminals, with rules where they appear
+
+chain                : 1 2 3 4 6
+expr                 : 9 16 16 17 17 18
+head                 : 2 4 0
+rule                 : 5 6 8
+section              : 7 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . head
+    (1) head -> . ACTION LCBRACKET chain RCBRACKET
+    (2) head -> . head ACTION LCBRACKET chain RCBRACKET
+    (3) head -> . ALERT ACTION LCBRACKET chain RCBRACKET
+    (4) head -> . head ALERT ACTION LCBRACKET chain RCBRACKET
+
+    ACTION          shift and go to state 2
+    ALERT           shift and go to state 3
+
+    head                           shift and go to state 1
+
+state 1
+
+    (0) S' -> head .
+    (2) head -> head . ACTION LCBRACKET chain RCBRACKET
+    (4) head -> head . ALERT ACTION LCBRACKET chain RCBRACKET
+
+    ACTION          shift and go to state 4
+    ALERT           shift and go to state 5
+
+
+state 2
+
+    (1) head -> ACTION . LCBRACKET chain RCBRACKET
+
+    LCBRACKET       shift and go to state 6
+
+
+state 3
+
+    (3) head -> ALERT . ACTION LCBRACKET chain RCBRACKET
+
+    ACTION          shift and go to state 7
+
+
+state 4
+
+    (2) head -> head ACTION . LCBRACKET chain RCBRACKET
+
+    LCBRACKET       shift and go to state 8
+
+
+state 5
+
+    (4) head -> head ALERT . ACTION LCBRACKET chain RCBRACKET
+
+    ACTION          shift and go to state 9
+
+
+state 6
+
+    (1) head -> ACTION LCBRACKET . chain RCBRACKET
+    (5) chain -> . PROTO LCBRACKET rule RCBRACKET
+    (6) chain -> . chain PROTO LCBRACKET rule RCBRACKET
+
+    PROTO           shift and go to state 11
+
+    chain                          shift and go to state 10
+
+state 7
+
+    (3) head -> ALERT ACTION . LCBRACKET chain RCBRACKET
+
+    LCBRACKET       shift and go to state 12
+
+
+state 8
+
+    (2) head -> head ACTION LCBRACKET . chain RCBRACKET
+    (5) chain -> . PROTO LCBRACKET rule RCBRACKET
+    (6) chain -> . chain PROTO LCBRACKET rule RCBRACKET
+
+    PROTO           shift and go to state 11
+
+    chain                          shift and go to state 13
+
+state 9
+
+    (4) head -> head ALERT ACTION . LCBRACKET chain RCBRACKET
+
+    LCBRACKET       shift and go to state 14
+
+
+state 10
+
+    (1) head -> ACTION LCBRACKET chain . RCBRACKET
+    (6) chain -> chain . PROTO LCBRACKET rule RCBRACKET
+
+    RCBRACKET       shift and go to state 15
+    PROTO           shift and go to state 16
+
+
+state 11
+
+    (5) chain -> PROTO . LCBRACKET rule RCBRACKET
+
+    LCBRACKET       shift and go to state 17
+
+
+state 12
+
+    (3) head -> ALERT ACTION LCBRACKET . chain RCBRACKET
+    (5) chain -> . PROTO LCBRACKET rule RCBRACKET
+    (6) chain -> . chain PROTO LCBRACKET rule RCBRACKET
+
+    PROTO           shift and go to state 11
+
+    chain                          shift and go to state 18
+
+state 13
+
+    (2) head -> head ACTION LCBRACKET chain . RCBRACKET
+    (6) chain -> chain . PROTO LCBRACKET rule RCBRACKET
+
+    RCBRACKET       shift and go to state 19
+    PROTO           shift and go to state 16
+
+
+state 14
+
+    (4) head -> head ALERT ACTION LCBRACKET . chain RCBRACKET
+    (5) chain -> . PROTO LCBRACKET rule RCBRACKET
+    (6) chain -> . chain PROTO LCBRACKET rule RCBRACKET
+
+    PROTO           shift and go to state 11
+
+    chain                          shift and go to state 20
+
+state 15
+
+    (1) head -> ACTION LCBRACKET chain RCBRACKET .
+
+    ACTION          reduce using rule 1 (head -> ACTION LCBRACKET chain RCBRACKET .)
+    ALERT           reduce using rule 1 (head -> ACTION LCBRACKET chain RCBRACKET .)
+    $end            reduce using rule 1 (head -> ACTION LCBRACKET chain RCBRACKET .)
+
+
+state 16
+
+    (6) chain -> chain PROTO . LCBRACKET rule RCBRACKET
+
+    LCBRACKET       shift and go to state 21
+
+
+state 17
+
+    (5) chain -> PROTO LCBRACKET . rule RCBRACKET
+    (7) rule -> . section EOL
+    (8) rule -> . rule section EOL
+    (9) section -> . HEADER expr
+
+    HEADER          shift and go to state 24
+
+    rule                           shift and go to state 22
+    section                        shift and go to state 23
+
+state 18
+
+    (3) head -> ALERT ACTION LCBRACKET chain . RCBRACKET
+    (6) chain -> chain . PROTO LCBRACKET rule RCBRACKET
+
+    RCBRACKET       shift and go to state 25
+    PROTO           shift and go to state 16
+
+
+state 19
+
+    (2) head -> head ACTION LCBRACKET chain RCBRACKET .
+
+    ACTION          reduce using rule 2 (head -> head ACTION LCBRACKET chain RCBRACKET .)
+    ALERT           reduce using rule 2 (head -> head ACTION LCBRACKET chain RCBRACKET .)
+    $end            reduce using rule 2 (head -> head ACTION LCBRACKET chain RCBRACKET .)
+
+
+state 20
+
+    (4) head -> head ALERT ACTION LCBRACKET chain . RCBRACKET
+    (6) chain -> chain . PROTO LCBRACKET rule RCBRACKET
+
+    RCBRACKET       shift and go to state 26
+    PROTO           shift and go to state 16
+
+
+state 21
+
+    (6) chain -> chain PROTO LCBRACKET . rule RCBRACKET
+    (7) rule -> . section EOL
+    (8) rule -> . rule section EOL
+    (9) section -> . HEADER expr
+
+    HEADER          shift and go to state 24
+
+    rule                           shift and go to state 27
+    section                        shift and go to state 23
+
+state 22
+
+    (5) chain -> PROTO LCBRACKET rule . RCBRACKET
+    (8) rule -> rule . section EOL
+    (9) section -> . HEADER expr
+
+    RCBRACKET       shift and go to state 28
+    HEADER          shift and go to state 24
+
+    section                        shift and go to state 29
+
+state 23
+
+    (7) rule -> section . EOL
+
+    EOL             shift and go to state 30
+
+
+state 24
+
+    (9) section -> HEADER . expr
+    (10) expr -> . QUOTES
+    (11) expr -> . FUNC QUOTES
+    (12) expr -> . NUMBER
+    (13) expr -> . NUMBER RANGE
+    (14) expr -> . RANGE NUMBER
+    (15) expr -> . NUMBER RANGE NUMBER
+    (16) expr -> . expr OR expr
+    (17) expr -> . expr AND expr
+    (18) expr -> . NOT expr
+
+    QUOTES          shift and go to state 32
+    FUNC            shift and go to state 33
+    NUMBER          shift and go to state 34
+    RANGE           shift and go to state 35
+    NOT             shift and go to state 36
+
+    expr                           shift and go to state 31
+
+state 25
+
+    (3) head -> ALERT ACTION LCBRACKET chain RCBRACKET .
+
+    ACTION          reduce using rule 3 (head -> ALERT ACTION LCBRACKET chain RCBRACKET .)
+    ALERT           reduce using rule 3 (head -> ALERT ACTION LCBRACKET chain RCBRACKET .)
+    $end            reduce using rule 3 (head -> ALERT ACTION LCBRACKET chain RCBRACKET .)
+
+
+state 26
+
+    (4) head -> head ALERT ACTION LCBRACKET chain RCBRACKET .
+
+    ACTION          reduce using rule 4 (head -> head ALERT ACTION LCBRACKET chain RCBRACKET .)
+    ALERT           reduce using rule 4 (head -> head ALERT ACTION LCBRACKET chain RCBRACKET .)
+    $end            reduce using rule 4 (head -> head ALERT ACTION LCBRACKET chain RCBRACKET .)
+
+
+state 27
+
+    (6) chain -> chain PROTO LCBRACKET rule . RCBRACKET
+    (8) rule -> rule . section EOL
+    (9) section -> . HEADER expr
+
+    RCBRACKET       shift and go to state 37
+    HEADER          shift and go to state 24
+
+    section                        shift and go to state 29
+
+state 28
+
+    (5) chain -> PROTO LCBRACKET rule RCBRACKET .
+
+    RCBRACKET       reduce using rule 5 (chain -> PROTO LCBRACKET rule RCBRACKET .)
+    PROTO           reduce using rule 5 (chain -> PROTO LCBRACKET rule RCBRACKET .)
+
+
+state 29
+
+    (8) rule -> rule section . EOL
+
+    EOL             shift and go to state 38
+
+
+state 30
+
+    (7) rule -> section EOL .
+
+    RCBRACKET       reduce using rule 7 (rule -> section EOL .)
+    HEADER          reduce using rule 7 (rule -> section EOL .)
+
+
+state 31
+
+    (9) section -> HEADER expr .
+    (16) expr -> expr . OR expr
+    (17) expr -> expr . AND expr
+
+    EOL             reduce using rule 9 (section -> HEADER expr .)
+    OR              shift and go to state 39
+    AND             shift and go to state 40
+
+
+state 32
+
+    (10) expr -> QUOTES .
+
+    OR              reduce using rule 10 (expr -> QUOTES .)
+    AND             reduce using rule 10 (expr -> QUOTES .)
+    EOL             reduce using rule 10 (expr -> QUOTES .)
+
+
+state 33
+
+    (11) expr -> FUNC . QUOTES
+
+    QUOTES          shift and go to state 41
+
+
+state 34
+
+    (12) expr -> NUMBER .
+    (13) expr -> NUMBER . RANGE
+    (15) expr -> NUMBER . RANGE NUMBER
+
+    OR              reduce using rule 12 (expr -> NUMBER .)
+    AND             reduce using rule 12 (expr -> NUMBER .)
+    EOL             reduce using rule 12 (expr -> NUMBER .)
+    RANGE           shift and go to state 42
+
+
+state 35
+
+    (14) expr -> RANGE . NUMBER
+
+    NUMBER          shift and go to state 43
+
+
+state 36
+
+    (18) expr -> NOT . expr
+    (10) expr -> . QUOTES
+    (11) expr -> . FUNC QUOTES
+    (12) expr -> . NUMBER
+    (13) expr -> . NUMBER RANGE
+    (14) expr -> . RANGE NUMBER
+    (15) expr -> . NUMBER RANGE NUMBER
+    (16) expr -> . expr OR expr
+    (17) expr -> . expr AND expr
+    (18) expr -> . NOT expr
+
+    QUOTES          shift and go to state 32
+    FUNC            shift and go to state 33
+    NUMBER          shift and go to state 34
+    RANGE           shift and go to state 35
+    NOT             shift and go to state 36
+
+    expr                           shift and go to state 44
+
+state 37
+
+    (6) chain -> chain PROTO LCBRACKET rule RCBRACKET .
+
+    RCBRACKET       reduce using rule 6 (chain -> chain PROTO LCBRACKET rule RCBRACKET .)
+    PROTO           reduce using rule 6 (chain -> chain PROTO LCBRACKET rule RCBRACKET .)
+
+
+state 38
+
+    (8) rule -> rule section EOL .
+
+    RCBRACKET       reduce using rule 8 (rule -> rule section EOL .)
+    HEADER          reduce using rule 8 (rule -> rule section EOL .)
+
+
+state 39
+
+    (16) expr -> expr OR . expr
+    (10) expr -> . QUOTES
+    (11) expr -> . FUNC QUOTES
+    (12) expr -> . NUMBER
+    (13) expr -> . NUMBER RANGE
+    (14) expr -> . RANGE NUMBER
+    (15) expr -> . NUMBER RANGE NUMBER
+    (16) expr -> . expr OR expr
+    (17) expr -> . expr AND expr
+    (18) expr -> . NOT expr
+
+    QUOTES          shift and go to state 32
+    FUNC            shift and go to state 33
+    NUMBER          shift and go to state 34
+    RANGE           shift and go to state 35
+    NOT             shift and go to state 36
+
+    expr                           shift and go to state 45
+
+state 40
+
+    (17) expr -> expr AND . expr
+    (10) expr -> . QUOTES
+    (11) expr -> . FUNC QUOTES
+    (12) expr -> . NUMBER
+    (13) expr -> . NUMBER RANGE
+    (14) expr -> . RANGE NUMBER
+    (15) expr -> . NUMBER RANGE NUMBER
+    (16) expr -> . expr OR expr
+    (17) expr -> . expr AND expr
+    (18) expr -> . NOT expr
+
+    QUOTES          shift and go to state 32
+    FUNC            shift and go to state 33
+    NUMBER          shift and go to state 34
+    RANGE           shift and go to state 35
+    NOT             shift and go to state 36
+
+    expr                           shift and go to state 46
+
+state 41
+
+    (11) expr -> FUNC QUOTES .
+
+    OR              reduce using rule 11 (expr -> FUNC QUOTES .)
+    AND             reduce using rule 11 (expr -> FUNC QUOTES .)
+    EOL             reduce using rule 11 (expr -> FUNC QUOTES .)
+
+
+state 42
+
+    (13) expr -> NUMBER RANGE .
+    (15) expr -> NUMBER RANGE . NUMBER
+
+    OR              reduce using rule 13 (expr -> NUMBER RANGE .)
+    AND             reduce using rule 13 (expr -> NUMBER RANGE .)
+    EOL             reduce using rule 13 (expr -> NUMBER RANGE .)
+    NUMBER          shift and go to state 47
+
+
+state 43
+
+    (14) expr -> RANGE NUMBER .
+
+    OR              reduce using rule 14 (expr -> RANGE NUMBER .)
+    AND             reduce using rule 14 (expr -> RANGE NUMBER .)
+    EOL             reduce using rule 14 (expr -> RANGE NUMBER .)
+
+
+state 44
+
+    (18) expr -> NOT expr .
+    (16) expr -> expr . OR expr
+    (17) expr -> expr . AND expr
+
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+    EOL             reduce using rule 18 (expr -> NOT expr .)
+    OR              shift and go to state 39
+    AND             shift and go to state 40
+
+  ! OR              [ reduce using rule 18 (expr -> NOT expr .) ]
+  ! AND             [ reduce using rule 18 (expr -> NOT expr .) ]
+
+
+state 45
+
+    (16) expr -> expr OR expr .
+    (16) expr -> expr . OR expr
+    (17) expr -> expr . AND expr
+
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+    EOL             reduce using rule 16 (expr -> expr OR expr .)
+    OR              shift and go to state 39
+    AND             shift and go to state 40
+
+  ! OR              [ reduce using rule 16 (expr -> expr OR expr .) ]
+  ! AND             [ reduce using rule 16 (expr -> expr OR expr .) ]
+
+
+state 46
+
+    (17) expr -> expr AND expr .
+    (16) expr -> expr . OR expr
+    (17) expr -> expr . AND expr
+
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+    EOL             reduce using rule 17 (expr -> expr AND expr .)
+    OR              shift and go to state 39
+    AND             shift and go to state 40
+
+  ! OR              [ reduce using rule 17 (expr -> expr AND expr .) ]
+  ! AND             [ reduce using rule 17 (expr -> expr AND expr .) ]
+
+
+state 47
+
+    (15) expr -> NUMBER RANGE NUMBER .
+
+    OR              reduce using rule 15 (expr -> NUMBER RANGE NUMBER .)
+    AND             reduce using rule 15 (expr -> NUMBER RANGE NUMBER .)
+    EOL             reduce using rule 15 (expr -> NUMBER RANGE NUMBER .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for OR in state 44 resolved as shift
+WARNING: shift/reduce conflict for AND in state 44 resolved as shift
+WARNING: shift/reduce conflict for OR in state 45 resolved as shift
+WARNING: shift/reduce conflict for AND in state 45 resolved as shift
+WARNING: shift/reduce conflict for OR in state 46 resolved as shift
+WARNING: shift/reduce conflict for AND in state 46 resolved as shift

@@ -1,7 +1,7 @@
 import ply.yacc as yacc
-from lexercat import tokens
-from datatypes import Head, Chain, Rule, Section
-from expression import *
+from analyzer.lexercat import tokens
+from analyzer.datatypes import Head, Chain, Rule, Section
+from analyzer.expression import *
 
 """
 Grammar rules: (Not updated)
@@ -122,7 +122,7 @@ def p_expr_not(p):
 
 def p_error(p):
     if p:
-         print("Syntax error at token:", p.type, "\nAt position: ", (p.lexpos, p.lineno), "\nIllegal char:", p.value)
+         print("Syntax error at token:", p.type, "\nAt position: ", (p.lexpos, p.lineno), "\nIllegal char(s):", p.value)
     else:
          print("ParserError: End-Of-File")
 

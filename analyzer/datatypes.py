@@ -18,6 +18,8 @@ class Rule:
     proto: str
 
     def __init__(self, sections, proto) -> None:
+        if not sections:
+            sections = []
         self.sections = sections
         self.proto = proto
 
@@ -31,6 +33,8 @@ class Chain:
     action: str
 
     def __init__(self, rules, action, alert=False) -> None:
+        if not rules:
+            rules = []
         self.rules = rules
         self.action = action
         self.alert = alert
@@ -47,6 +51,8 @@ class Head:
     chains: Sequence[Chain]
 
     def __init__(self, chains) -> None:
+        if not chains:
+            chains = []
         self.chains = chains
 
     def __str__(self) -> str:
