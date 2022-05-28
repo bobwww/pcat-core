@@ -14,3 +14,16 @@ class ConditionDrain(Drain):
     def high_push(self, msg):
         if self.f(msg):
             self._high_send(msg)
+
+def get_packet_layers(packet):
+    '''
+    Given a packet, generates its layers' names.
+    '''
+    counter = 0
+    while True:
+        layer = packet.getlayer(counter)
+        if layer is None:
+            break
+
+        yield layer
+        counter += 1

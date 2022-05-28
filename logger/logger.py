@@ -1,23 +1,25 @@
-import json
-import datetime as dt
-from scapy.all import hexdump
+from pymongo import MongoClient
+from datetime import datetime
+from scapy.all import raw
+from utils import get_packet_layers
 
-def verdict_to_json(verdict):
-    return json.dumps({
-        'time': dt.datetime.strftime('%Y-%m-%d::%H:%M:%S'),
-        'payload': hexdump(verdict.pkt),
-        'alert': verdict.alert,
-        'sent': verdict.send
-    })
-
-
+    
 class Logger:
 
-    def __init__(self, path):
-        self.fd = open(path, 'a')
+    def __init__(self, uri: str) -> None:
+        # Establishes connection to database
+        self.client = MongoClient(uri)
+        self.coll = self.db.coll
 
-    def log(self, verdict):
-        self.fd.write(verdict_to_json(verdict) + '\n')
-
-    def __del__(self):
-        self.fd.close()
+    def log(self, verdict, utctime: datetime=None) -> None:
+        """
+        Logs the packet and its metadata.
+        """
+        self.coll.insert_one(
+                {
+                'raw': raw(verdict.pkt),
+                'layers': [name for name in get_packet_layers(verdict.pkt)],
+                'time': utctime if utctime else datetime.utcnow(),
+                'flags': {'alert': verdict.alert, 'sent': verdict.send}
+                }
+        )
