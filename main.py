@@ -7,7 +7,7 @@ from logger.logger import Logger
 from analyzer.parsercat import parse
 
 #Import web app
-from GUI.app import app
+from gui.app import app
 
 from scapy.all import *
 from utils import ConditionDrain
