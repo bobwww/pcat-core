@@ -5,12 +5,11 @@
 # }
 
 class Verdict:
-    guide = {
-        # action: (send_pkt, log_pkt)
-        'allow': {'send': True, 'log': True},
+    GUIDE = {
+        'allow' : {'send': True, 'log': True},
         'sallow': {'send': True, 'log': False},
-        'deny': {'send': False, 'log': True},
-        'sdeny': {'send': False, 'log': False}
+        'deny'  : {'send': False, 'log': True},
+        'sdeny' : {'send': False, 'log': False}
     }
 
     def __init__(self, pkt, alert=False, log=False, send=False) -> None:
@@ -20,17 +19,17 @@ class Verdict:
         self.send = send
 
     @classmethod
-    def evaluate_verdict(cls, analysis, default):
+    def evaluate_verdict(cls, analysis, conf):
         if analysis.legal:
             return cls(
-                analysis.pkt, alert=default['alert'], log=default['log'], send=default['send']
+                analysis.pkt, alert=conf['default']['alert'], log=conf['default']['log'], send=conf['default']['send']
             )
         else:
             return cls(
                 analysis.pkt,
                 alert=analysis.trigger_chain.alert,
-                log=cls.guide[analysis.trigger_chain.action]['log'],
-                send=cls.guide[analysis.trigger_chain.action]['send']
+                log=cls.GUIDE[analysis.trigger_chain.action]['log'],
+                send=cls.GUIDE[analysis.trigger_chain.action]['send']
             )
 
 
