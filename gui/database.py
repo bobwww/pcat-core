@@ -2,6 +2,11 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 
 class TimeRange:
+    """Describes a timerange.
+
+    Returns:
+        _type_: _description_
+    """
 
     # time should be at this format: YYYYMMDDhh[mm][ss][ms]
     def __init__(self, start: datetime, end:datetime=None, span:timedelta=None) -> None:
@@ -22,7 +27,7 @@ class LogReader:
 
     def __init__(self, uri):
         self.client = MongoClient(uri)
-        self.coll = self.db.coll
+        self.coll = self.client.pcat.data # allow custom names later
 
     def get_by_timerange(self, start, end=None, span=None):
         timerange = TimeRange(start, end, span)
@@ -46,14 +51,14 @@ class LogReader:
                         '$lte': timerange.end
                          }
         if flags:
-            new_flags = {}
-            for key in flags:
-                new_flags[f'flags.{key}'] = flags[key]
-            qry.update(new_flags)
+            # new_flags = {}
+            # for key in flags:
+            #     new_flags[f'flags.{key}'] = flags[key]
+            qry.update(flags)
         
         if protos:
             qry['layers'] = { '$all': protos}
-
+        # print('Final query is:', qry)
         if one_result:
             return self.coll.find_one(qry)
         else:
@@ -75,3 +80,8 @@ class LogReader:
 
 
 
+    def delete_query(self, index, one=True):
+        if one:
+            self.coll.delete_one({'index': index})
+        else:
+            self.coll.delete_many({'index': index})

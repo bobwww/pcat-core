@@ -1,25 +1,5 @@
-
-allow { # Conenctions inside network
-# are alllowed
-	ip {
-		src: fullmatch "192\.168\.0\.[0-2][0-5][0-9]";
-		dst: not search "^10\.0"; # not allowed 10 prefix network
-		ttl: 100-;
-	}
-
-}
 deny {
-
-	tcp {# deny everything else
-		dport:	0-60;
-	}
-	udp {
-		dport: 0-60;
-	}
-
-}
-alert deny {
 	ip {
-		dst: "8.8.8.8";
+		dst: contains "1";
 	}
 }

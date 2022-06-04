@@ -38,6 +38,7 @@ class Chain:
         self.rules = rules
         self.action = action
         self.alert = alert
+        self.name = 'PlaceholderName'
 
     def __str__(self) -> str:
         return "{alert}{action} {{\n\t{rules}\n}}".format(

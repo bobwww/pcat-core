@@ -1,0 +1,27 @@
+{
+    "Sniffer":
+    {
+        "main": "sniffer.py",
+        "args": []
+    },
+    "Analyzer":
+    {
+        "main": "analyzer.py",
+        "args": []
+    },
+    "Enforcer":
+    {
+        "main": "enforcer.py",
+        "args": []
+    },
+    "Logger": 
+    {
+        "main": "logger.py",
+        "args": [] 
+    },
+    "Sender":
+    {
+        "main": "sender.py",
+        "args": [] 
+    }
+}

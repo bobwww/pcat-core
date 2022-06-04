@@ -12,29 +12,37 @@ from gui.app import app
 from scapy.all import *
 from utils import ConditionDrain
 
+import yaml
+
+
+    
+
+
 def main():
     '''
     
     '''
 
-    ROOTDIR = '.'  # Root directory for scripts, settings, etc.
-    DATADIR = ROOTDIR + '/data'
+    ROOTDIR = '.'  # Root directory
+    DATADIR = ROOTDIR + '/data' # Data directory
 
-    # Retrieve ruleset from file
+    # Retrieve rule script from file and parse
     with open(DATADIR + '/script.lcat', 'r') as fd:
         script = fd.read()
     try:
         ruleset = parse(script)
-    except SyntaxError as e:
+    except SyntaxError as e: # Handle parser errors
+                            # Add ability to show all errors before raising exception
         print(f'An error occurred during parsing: {str(e)}')
         print('Exiting...')
         exit()
 
-    with open(DATADIR + '/config.cfg', 'r') as fd:
-        cfg = fd.read() # use yaml or json
+    # Loading configuration
+    cfg = {'send': False, 'log':True, 'alert':False}
+    
     
     #mongo_uri = cfg...
-    mongo_uri = ''
+    mongo_uri = 'mongodb://localhost:27017'
 
     # Main components: sniffer, analyezr, enforcer, and logger
     # Using scapy's PipeTools
@@ -52,8 +60,8 @@ def main():
     enforcer_drain = TransformDrain(enforcer.enforce)
     #
 
-    log_cond = ConditionDrain(lambda x: x.log)  # lambda x:x.log
-    send_cond = ConditionDrain(lambda x: x.send)
+    log_cond = ConditionDrain(lambda x: x['log'])  # lambda x:x.log
+    send_cond = ConditionDrain(lambda x: x['send'])
     sender = InjectSink()  # iface=conf.iface
     logger = Logger(mongo_uri)
     logger_drain = TransformDrain(logger.log)
@@ -61,7 +69,7 @@ def main():
 
     sniffer > analyzer_drain > enforcer_drain
     enforcer_drain > log_cond > logger_drain
-    enforcer > send_cond > sender
+    #enforcer_drain > send_cond > sender
 
     x = PipeEngine(sniffer)
     #start pipe engine

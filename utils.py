@@ -25,5 +25,7 @@ def get_packet_layers(packet):
         if layer is None:
             break
 
-        yield layer
+        yield layer.name
         counter += 1
+
+
