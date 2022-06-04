@@ -16,9 +16,3 @@ class ConditionDrain(Drain):
             self._high_send(msg)
 
 
-def ask_confirm(msg):
-    ans = input(msg + '(y/n)')
-    if ans in ['Y', 'y', 'yes']:
-        return True
-    else:
-        return False
