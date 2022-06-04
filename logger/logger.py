@@ -12,5 +12,4 @@ class Logger:
         """
         Logs the packet and its metadata.
         """
-
         self.coll.insert_one(results)

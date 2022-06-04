@@ -1,5 +1,11 @@
-deny {
+sdeny {
 	ip {
-		dst: contains "1";
+		dst: contains "192";
+	}
+}
+
+allow {
+	ip {
+		src: contains "1";
 	}
 }

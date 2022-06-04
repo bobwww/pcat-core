@@ -1,27 +1,28 @@
 {
-    "Sniffer":
-    {
-        "main": "sniffer.py",
-        "args": []
+    "sniffer": {
+        "iface": ""
     },
-    "Analyzer":
-    {
-        "main": "analyzer.py",
-        "args": []
+    "analyzer": {
+        "plugins": {
+            "./example.py": [
+                "argument1",
+                "argument2"
+            ]
+        },
+        "rulesetPath": "./data/script.lcat",
+        "skipRuleset": false
     },
-    "Enforcer":
-    {
-        "main": "enforcer.py",
-        "args": []
+    "enforcer": {
+        "default": {
+            "alert": false,
+            "log": true,
+            "send": true
+        }
     },
-    "Logger": 
-    {
-        "main": "logger.py",
-        "args": [] 
+    "logger": {
+        "uri": "mongodb://localhost:27017"
     },
-    "Sender":
-    {
-        "main": "sender.py",
-        "args": [] 
+    "sender": {
+        "iface": ""
     }
 }
