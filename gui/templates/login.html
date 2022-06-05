@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block body %}
+<section class="hero is-white is-medium">
+  <nav class="navbar is-transparent">
+    <div class="navbar-brand" style="align-items: center;">
+      <a class="navbar-item" href="/">
+        <img src="../static/test.png" alt="PCAT Logo">
+        <h6 href="/" class="subtitle"><strong>PCAT System</strong></h6>
+      </a>
+      <div id="navbar-burger-id" class="navbar-burger burger" data-target="navbar-menu-id">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+</section>
+<title>PCAT System GUI</title>
+<section class="hero is-primary is-bold is-medium">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="columns">
+        <div class="column is-auto">
+          <div id="login-box" class="login-box">
+            <div class="login-area">
+              <h1 class="title">Login</h1>
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input id="login-user" class="input is-success" type="text" placeholder="Username">
+                  <span class="icon is-small is-left">
+                    <i class="fa fa-user"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fa fa-check"></i>
+                  </span>
+                </p>
+              </div>
+              <div class="field">
+                <p class="control has-icons-left has-icons-right">
+                  <input id="login-pass" class="input" type="password" placeholder="Password">
+                  <span class="icon is-small is-left">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fa fa-check"></i>
+                  </span>
+                </p>
+              </div>
+              <br>
+              <a id="login-button" class="form-button button is-primary is-inverted is-outlined">Login</a>
+              <br>
+              <br>
+              <i><a id="feedback" class="feedback"></a></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script src="../static/js/scripts.js"></script>
+{% endblock %}
