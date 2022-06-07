@@ -7,29 +7,16 @@ from logger.logger import Logger
 from analyzer.parsercat import parse
 
 # Import GUI (Web application)
-from gui.app import app
+from gui import app
 
 # Import Scapy for Pipetools
 from scapy.all import SniffSource, TransformDrain, InjectSink, PipeEngine
 from utils import ConditionDrain, ask_confirm
 
+# Import config manager
 import config
 
-
-def ask_confirm(msg: str) -> bool:
-    """Asks user a yes/no questions, and returns answer as a bool.
-
-    Args:
-        msg (str): the question to be displayed
-
-    Returns:
-        bool: True if answered yes, False otherwise
-    """
-    ans = input(msg + '(y/n)')
-    if ans in ['Y', 'y', 'yes']:
-        return True
-    else:
-        return False
+from threading import Thread,Condition, Event
 
 
 def safe_exit() -> None:
@@ -37,7 +24,6 @@ def safe_exit() -> None:
     """
     print('Exiting...')
     exit()
-
 
 
 def main():
@@ -122,21 +108,46 @@ Do you wish to reset it to default?'''):
     enforcer_drain > log_cond > logger_drain
     #enforcer_drain > send_cond > sender
 
-    x = PipeEngine(sniffer)
+    t1 = PipeEngine(sniffer)
     #start pipe engine, starting another thread
-    x.start()
+
 
     #start the gui
     # to add: dedicated thread for gui
-    app.run()
+    # try:
+    #     app.run()
+    # except KeyboardInterrupt:
+    #     pass
+
+
+
+    # t1.start()
+
 
     #monitoring of program...
     #
     #
+    ev_exit = Event()
+    # t2 = Thread(target=wait_for_shutdown, args=(ev_exit,))
+    # t2.start()
+    # flask must run on main thread
+
+    app.main(ev_exit)
+    
 
     # stoping program (critical error or by admin command)
-    x.stop()
-    exit()
+    # t1.stop()
+    # t2.stop() threading doesnt have this option
+    safe_exit()
+
+
+
+def wait_for_shutdown(ev):
+    ev.wait()
+    print('Received signal tos shutdown')
+    safe_exit()
+
+
 
 
 if __name__ == '__main__':

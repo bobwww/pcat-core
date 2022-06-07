@@ -3,7 +3,7 @@ import bcrypt
 from bson import ObjectId
 import re
 from pymongo import MongoClient
-
+import json
 
 #############
 # Permissions
@@ -79,6 +79,14 @@ class User:
                 return False
         return True
 
+    def to_json(self):
+        return {
+            'uuid': str(self.uuid),
+            'username': self.username,
+            'email': self.email,
+            'perms': tuple(self.perms)
+        }
+
     def __str__(self) -> str:
         return f"UUID: {self.uuid}\nUsername: {self.username}\nEmail: {self.email}\nPerms: {self.perms}"
 
@@ -91,6 +99,7 @@ class PowerUser(User):
     def check_perms(self, required_perms: Sequence) -> bool:
         return PERM_ADMIN not in required_perms
         # Has any perm except the admin perm
+
 class Administrator(PowerUser):
 
     def __init__(self, uuid: ObjectId, username: str, email: str, perms: set) -> None:
@@ -166,6 +175,15 @@ class UserSystem:
 
         return User(_id, username, email, perms)
 
+
+    def from_json(self, user):
+        if PERM_ADMIN in user['perms']:
+            return self.admin
+        if PERM_POWER in user['perms']:
+            return PowerUser(user['uuid'], user['username'], user['email'], set(user['perms']))
+        else:
+            return User(user['uuid'], user['username'], user['email'], set(user['perms']))
+
     @classmethod
     def __validate_credentials(cls, username, passwd, email):
         if not re.fullmatch(cls.USERNAME_PATTERN, username):
@@ -191,3 +209,5 @@ class UserSystem:
             passwd = passwd.encode('utf-8')
 
         return bcrypt.checkpw(passwd, hashed_passwd)
+
+u = User(ObjectId(b'123456789012'), 'hello', '', {'VIEW'})

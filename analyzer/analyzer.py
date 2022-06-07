@@ -11,7 +11,7 @@ class Analyzer:
         Args:
             ruleset (str): string representation of an LCAT file
         """
-        self.ruleset = ruleset
+        # self.ruleset = ruleset
         self.evaluator = Evaluator(ruleset)
 
     def analyze(self, pkt) -> Dict[str, Any]:

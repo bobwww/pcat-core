@@ -16,3 +16,17 @@ class ConditionDrain(Drain):
             self._high_send(msg)
 
 
+def ask_confirm(msg: str) -> bool:
+    """Asks user a yes/no questions, and returns answer as a bool.
+
+    Args:
+        msg (str): the question to be displayed
+
+    Returns:
+        bool: True if answered yes, False otherwise
+    """
+    ans = input(msg + '(y/n)')
+    if ans in ['Y', 'y', 'yes']:
+        return True
+    else:
+        return False
