@@ -2,3 +2,4 @@ Flask==2.0.3
 ply==3.11
 pymongo==4.0
 scapy==2.4.5
+bcrypt

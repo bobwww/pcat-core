@@ -1,0 +1,28 @@
+{
+    "sniffer": {
+        "iface": ""
+    },
+    "analyzer": {
+        "plugins": {
+            "./example.py": [
+                "argument1",
+                "argument2"
+            ]
+        },
+        "rulesetPath": "./data/script.lcat",
+        "skipRuleset": false
+    },
+    "enforcer": {
+        "default": {
+            "alert": false,
+            "log": true,
+            "send": true
+        }
+    },
+    "logger": {
+        "uri": "mongodb://localhost:27017"
+    },
+    "sender": {
+        "iface": ""
+    }
+}

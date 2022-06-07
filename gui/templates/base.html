@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <title>{% block title %}{% endblock %} - PCAT</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="header">
+        {% block header %}
+        PCAT System
+        {% endblock %}
+    </div>
+
+    <div id="content">{% block content %}{% endblock %}</div>
+
+    <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>

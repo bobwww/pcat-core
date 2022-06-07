@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Packets{% endblock %}
+{% block content %}
+
+<table>
+    <tr>
+        <th>packet raw</th>
+        <th>legal</th>
+    </tr>
+    {% for d in lst %}
+    <tr>
+        <td>{{ d['packet'] }}</td>
+        <td>{{ d['legal'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

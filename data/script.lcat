@@ -1,0 +1,11 @@
+sdeny {
+	ip {
+		dst: contains "192";
+	}
+}
+
+allow {
+	ip {
+		src: contains "1";
+	}
+}
